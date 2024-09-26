@@ -59,11 +59,14 @@ stages:
         commands:
           - touch /usr/lib/modprobe.d/70-rtw89.conf
           # - echo "blacklist rtw89_8852be" >> /etc/modprobe.d/50-rtw89.conf # blacklist the old driver
+          - echo "options rtw89_pci disable_clkreq=y disable_aspm_l1=y disable_aspm_l1ss=y" >> /usr/lib/modprobe.d/70-rtw89.conf
+          - echo "options rtw89pci disable_clkreq=y disable_aspm_l1=y disable_aspm_l1ss=y" >> /usr/lib/modprobe.d/70-rtw89.conf
 
-          - echo "options rtw89_core disable_ps_mode=y" >> /usr/lib/modprobe.d/70-rtw89.conf
-          - echo "options rtw89_core disable_clkreq=y" >> /usr/lib/modprobe.d/70-rtw89.conf
-          - echo "options rtw89_core disable_aspm_l1=y" >> /usr/lib/modprobe.d/70-rtw89.conf
-          - echo "options rtw89_core disable_aspm_l1ss=y" >> /usr/lib/modprobe.d/70-rtw89.conf
+          # - echo "options rtw89_core disable_ps_mode=y" >> /usr/lib/modprobe.d/70-rtw89.conf
+          # - echo "options rtw89_core disable_clkreq=y" >> /usr/lib/modprobe.d/70-rtw89.conf
+          # - echo "options rtw89_core disable_aspm_l1=y" >> /usr/lib/modprobe.d/70-rtw89.conf
+          # - echo "options rtw89_core disable_aspm_l1ss=y" >> /usr/lib/modprobe.d/70-rtw89.conf
+
 
       # Put your custom actions before this comment
 
