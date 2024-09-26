@@ -23,20 +23,20 @@ stages:
   # Put your custom actions behind this comment
   - name: rtw89-dkms
     type: shell
-      commands:
-      - apt-get install dh-sequence-dkms debhelper build-essential devscripts git-build-recipe git
-      - cd /tmp
-      - git clone https://github.com/lwfinger/rtw89.git
-      - cd rtw89
-      - git clean -xfd
-      - git deborig HEAD
-      - dpkg-buildpackage -us -uc
-      - dpkg -i ../rtw89-dkms_*.deb
-      - touch /etc/modprobe.d/50-rtw89.conf 
-      - echo "options rtw89_core disable_ps_mode=y" >> /etc/modprobe.d/50-rtw89.conf
-      - echo "options rtw89_core disable_clkreq=y" >> /etc/modprobe.d/50-rtw89.conf
-      - echo "options rtw89_core disable_aspm_l1=y" >> /etc/modprobe.d/50-rtw89.conf
-      - echo "options rtw89_core disable_aspm_l1ss=y" >> /etc/modprobe.d/50-rtw89.conf
+    commands:
+    - apt-get install dh-sequence-dkms debhelper build-essential devscripts git-build-recipe git
+    - cd /tmp
+    - git clone https://github.com/lwfinger/rtw89.git
+    - cd rtw89
+    - git clean -xfd
+    - git deborig HEAD
+    - dpkg-buildpackage -us -uc
+    - dpkg -i ../rtw89-dkms_*.deb
+    - touch /etc/modprobe.d/50-rtw89.conf 
+    - echo "options rtw89_core disable_ps_mode=y" >> /etc/modprobe.d/50-rtw89.conf
+    - echo "options rtw89_core disable_clkreq=y" >> /etc/modprobe.d/50-rtw89.conf
+    - echo "options rtw89_core disable_aspm_l1=y" >> /etc/modprobe.d/50-rtw89.conf
+    - echo "options rtw89_core disable_aspm_l1ss=y" >> /etc/modprobe.d/50-rtw89.conf
 
     
   # Put your custom actions before this comment
