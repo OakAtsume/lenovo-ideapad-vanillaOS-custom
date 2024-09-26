@@ -58,7 +58,6 @@ stages:
         type: shell
         commands:
           - touch /etc/modprobe.d/50-rtw89.conf
-          - echo "blacklist rtw89_8852be" >> /etc/modprobe.d/50-rtw89.conf # blacklist the old driver
           - echo "options rtw89_core disable_ps_mode=y" >> /etc/modprobe.d/50-rtw89.conf
           - echo "options rtw89_core disable_clkreq=y" >> /etc/modprobe.d/50-rtw89.conf
           - echo "options rtw89_core disable_aspm_l1=y" >> /etc/modprobe.d/50-rtw89.conf
