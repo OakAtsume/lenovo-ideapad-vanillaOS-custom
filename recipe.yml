@@ -54,9 +54,6 @@ stages:
     type: shell
     commands:
       - dpkg -i /tmp/rtw89-dkms_*.deb
-      - modprobe rtw89pci
-
-
 
   - name: configure-kernel
     type: shell
