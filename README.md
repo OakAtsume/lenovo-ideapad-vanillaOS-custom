@@ -40,3 +40,11 @@ Now, that you are aware of the basics, let's explore the files and directories p
 - `includes.container`: The files included in this directory are added by default to your image to the specified location (**Note**: It also contains ABRoot's configuration file).
 - `modules`: This directory contains the modules that are used to customize the image. You can add your modules to this directory.
 - `recipe.yml`: This file contains the recipe for the image. It specifies the base image, modules and other fields to be present in the custom image.
+
+
+# How to fix the error "module verification failed: signature and/or required key missing - tainting kernel" in Linux
+
+> mokutil --reset
+> reboot
+You'll get a Blue Screen with a message "Enroll MOK" and then you can enroll the key. After that, the error will be gone.
+Or you can just delete all the keys by choosing "Delete all Secure Boot Keys" in the BIOS settings. But this will disable the Secure Boot feature.
