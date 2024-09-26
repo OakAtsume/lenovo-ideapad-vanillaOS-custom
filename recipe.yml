@@ -40,7 +40,15 @@ stages:
       - cd /tmp/rtw89
       - dpkg-buildpackage -b -rfakeroot -us -uc
       - cd ..
+      - ls
+
+  - name: install-rtw89
+    type: shell
+    commands:
       - dpkg -i rtw89-dkms_*.deb
+      - modprobe rtw89pci
+
+      
 
   - name: configure-kernel
     type: shell
