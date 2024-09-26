@@ -29,6 +29,7 @@ stages:
   - name: clone-rtw89-repo
     type: shell
     commands:
+      - cd /tmp
       - git clone https://github.com/lwfinger/rtw89.git
       - cd rtw89
       - git clean -xfd
@@ -36,10 +37,11 @@ stages:
   - name: build-rtw89
     type: shell
     commands:
+      - cd /tmp
       - cd /rtw89
       - dpkg-buildpackage -b -rfakeroot -us -uc
       - cd ..
-      - dpkg -i *.deb
+      - dpkg -i rtw89-dkms_*.deb
 
   - name: configure-kernel
     type: shell
