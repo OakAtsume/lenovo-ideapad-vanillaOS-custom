@@ -1,5 +1,5 @@
-name: Custom Vanilla Desktop # Replace this name with your image name
-id: custom # Replace this ID with your image ID
+name: Lenovo ideapad custom # Replace this name with your image name
+id: lenovo # Replace this ID with your image ID
 stages:
 - id: build
   base: ghcr.io/vanilla-os/desktop:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc
@@ -8,7 +8,6 @@ stages:
     maintainer: self-maintained # Optionally, Replace this with your name
   args:
     DEBIAN_FRONTEND: noninteractive # Set the image environment as non-interactive
-  
   # Commands to run first before building the modules
   runs:
     commands:
@@ -22,25 +21,24 @@ stages:
     - apt-get update
 
   # Put your custom actions behind this comment
-
-  - name: example-packages # Sample module using the built-in Apt module to install packages
-    type: apt
-    source:
-      packages:
-      - vim
-
-  - name: example-commands # Sample module demonstrating the Shell module with custom commands
+  - name: rtw89-dkms
     type: shell
-    commands:
-    - echo Example output
+      commands:
+      - apt-get install dh-sequence-dkms debhelper build-essential devscripts git-build-recipe git
+      - cd /tmp
+      - git clone https://github.com/lwfinger/rtw89.git
+      - cd rtw89
+      - git clean -xfd
+      - git deborig HEAD
+      - dpkg-buildpackage -us -uc
+      - dpkg -i ../rtw89-dkms_*.deb
+      - touch /etc/modprobe.d/50-rtw89.conf 
+      - echo "options rtw89_core disable_ps_mode=y" >> /etc/modprobe.d/50-rtw89.conf
+      - echo "options rtw89_core disable_clkreq=y" >> /etc/modprobe.d/50-rtw89.conf
+      - echo "options rtw89_core disable_aspm_l1=y" >> /etc/modprobe.d/50-rtw89.conf
+      - echo "options rtw89_core disable_aspm_l1ss=y" >> /etc/modprobe.d/50-rtw89.conf
 
-  - name: example-modules # Sample module demonstrating importing local and remote modules
-    type: includes
-    includes:
-      - modules/50-install-debs.yml # Sample local module present in this repository
-      - gh:vanilla-os/dev-image:main:modules/00-basics.yml # Sample GitHub remote module in the format: `gh:your-name/your-repo:branch:modules/file.yml`
-      - https://raw.githubusercontent.com/Vanilla-OS/dev-image/main/modules/05-go.yml # Sample full URL remote module
-
+    
   # Put your custom actions before this comment
 
   - name: set-image-name-abroot
@@ -75,3 +73,5 @@ stages:
       - rm -rf /tmp/*
       - rm -rf /var/tmp/*
       - rm -rf /sources
+
+
