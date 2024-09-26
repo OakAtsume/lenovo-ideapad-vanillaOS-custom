@@ -29,17 +29,15 @@ stages:
   - name: clone-rtw89-repo
     type: shell
     commands:
-      - cd /tmp
       - git clone https://github.com/lwfinger/rtw89.git
       - cd rtw89
       - git clean -xfd
-      - git deborig HEAD
 
   - name: build-rtw89
     type: shell
     commands:
-      - cd /tmp/rtw89
-      - dpkg-buildpackage -us -uc -b
+      - cd /rtw89
+      - dpkg-buildpackage -b -rfakeroot -us -uc
       - cd ..
       - dpkg -i *.deb
 
