@@ -24,7 +24,7 @@ stages:
   - name: install-build-deps
     type: shell
     commands:
-      - apt-get install -y --no-install-recommends dh-sequence-dkms debhelper build-essential devscripts git-build-recipe git
+      - apt-get install -y --no-install-recommends dh-sequence-dkms debhelper build-essential devscripts git-build-recipe git dkms
 
   - name: clone-rtw89-repo
     type: shell
@@ -37,8 +37,7 @@ stages:
   - name: build-rtw89
     type: shell
     commands:
-      - cd /tmp
-      - cd /rtw89
+      - cd /tmp/rtw89
       - dpkg-buildpackage -b -rfakeroot -us -uc
       - cd ..
       - dpkg -i rtw89-dkms_*.deb
