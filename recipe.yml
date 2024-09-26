@@ -21,11 +21,18 @@ stages:
     - apt-get update
 
   # Put your custom actions behind this comment
+  # - name: example-packages # Sample module using the built-in Apt module to install packages
+  #   type: apt
+  #   source:
+  #     packages:
+  #     - sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc linux-headers-$(uname -r) git
+
+      
   - name: install-build-deps
     type: shell
     commands:
       - apt-get update
-      - apt-get install -y --no-install-recommends dh-sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc linux-headers-$(uname -r) git
+      - apt-get install -y dh-sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc git dkms
 
   - name: clone-rtw89-repo
     type: shell
