@@ -24,7 +24,8 @@ stages:
   - name: install-build-deps
     type: shell
     commands:
-      - apt-get install -y --no-install-recommends dh-sequence-dkms debhelper build-essential devscripts git-build-recipe git dkms
+      - apt-get update
+      - apt-get install -y --no-install-recommends dh-sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc linux-headers-$(uname -r) git
 
   - name: clone-rtw89-repo
     type: shell
@@ -45,10 +46,10 @@ stages:
   - name: install-rtw89
     type: shell
     commands:
-      - dpkg -i rtw89-dkms_*.deb
+      - dpkg -i /tmp/rtw89-dkms_*.deb
       - modprobe rtw89pci
 
-      
+
 
   - name: configure-kernel
     type: shell
