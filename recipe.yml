@@ -1,111 +1,100 @@
 name: Lenovo ideapad custom # Replace this name with your image name
 id: lenovo # Replace this ID with your image ID
 stages:
-- id: build
-  base: ghcr.io/vanilla-os/desktop:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc
-  singlelayer: false
-  labels:
-    maintainer: self-maintained # Optionally, Replace this with your name
-  args:
-    DEBIAN_FRONTEND: noninteractive # Set the image environment as non-interactive
-  # Commands to run first before building the modules
-  runs:
-    commands:
-      - echo 'APT::Install-Recommends "1";' > /etc/apt/apt.conf.d/01norecommends
+  - id: build
+    base: ghcr.io/vanilla-os/desktop:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc
+    singlelayer: false
+    labels:
+      maintainer: self-maintained # Optionally, Replace this with your name
+    args:
+      DEBIAN_FRONTEND: noninteractive # Set the image environment as non-interactive
+    # Commands to run first before building the modules
+    runs:
+      commands:
+        - echo 'APT::Install-Recommends "1";' > /etc/apt/apt.conf.d/01norecommends
 
-  modules:
-  - name: init-setup
-    type: shell
-    commands:
-    - lpkg --unlock
-    - apt-get update
-
-  # Put your custom actions behind this comment
-  # - name: example-packages # Sample module using the built-in Apt module to install packages
-  #   type: apt
-  #   source:
-  #     packages:
-  #     - sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc linux-headers-$(uname -r) git
-
-      
-  - name: install-build-deps
-    type: shell
-    commands:
-      - apt-get update
-      - apt-get install -y dh-sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc git dkms
-
-  - name: clone-rtw89-repo
-    type: shell
-    commands:
-      - cd /tmp
-      - git clone https://github.com/lwfinger/rtw89.git
-      - cd rtw89
-      - git clean -xfd
-
-  - name: build-rtw89
-    type: shell
-    commands:
-      - cd /tmp/rtw89
-      - dpkg-buildpackage -b -rfakeroot -us -uc
-      - cd ..
-      - ls
-
-  - name: install-rtw89
-    type: shell
-    commands:
-      - dpkg -i /tmp/rtw89-dkms_*.deb
-
-  - name: configure-kernel
-    type: shell
-    commands:
-      - touch /etc/modprobe.d/50-rtw89.conf
-      - echo "blacklist rtw89_8852be" >> /etc/modprobe.d/50-rtw89.conf # blacklist the old driver
-      - echo "options rtw89_core disable_ps_mode=y" >> /etc/modprobe.d/50-rtw89.conf
-      - echo "options rtw89_core disable_clkreq=y" >> /etc/modprobe.d/50-rtw89.conf
-      - echo "options rtw89_core disable_aspm_l1=y" >> /etc/modprobe.d/50-rtw89.conf
-      - echo "options rtw89_core disable_aspm_l1ss=y" >> /etc/modprobe.d/50-rtw89.conf
-  
-  
-
-  - name: verify-load-rtw89
-    type: shell
-    commands:
-      - modprobe rtw89pci
-  
-
-  # Put your custom actions before this comment
-
-  - name: set-image-name-abroot
-    type: includes
-    includes:
-      - modules/80-set-image-abroot-config.yml
-
-  - name: cleanup
-    type: shell
-    commands:
-    - apt-get autoremove -y
-    - apt-get clean
-    - lpkg --lock
-
-  - name: fsguard
-    type: fsguard
-    CustomFsGuard: false
-    FsGuardLocation: "/usr/sbin/FsGuard"
-    GenerateKey: true
-    FilelistPaths: ["/usr/bin"]
     modules:
-      - name: remove-prev-fsguard
+      - name: init-setup
         type: shell
         commands:
-          - rm -rf /FsGuard 
-          - rm -f ./minisign.pub ./minisign.key 
-          - chmod +x /usr/sbin/init
+          - lpkg --unlock
+          - apt-get update
 
-  - name: cleanup2
-    type: shell
-    commands:
-      - rm -rf /tmp/*
-      - rm -rf /var/tmp/*
-      - rm -rf /sources
+      # Put your custom actions behind this comment
+      # - name: example-packages # Sample module using the built-in Apt module to install packages
+      #   type: apt
+      #   source:
+      #     packages:
+      #     - sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc linux-headers-$(uname -r) git
 
+      - name: install-build-deps
+        type: shell
+        commands:
+          - apt-get update
+          - apt-get install -y dh-sequence-dkms debhelper build-essential devscripts git-build-recipe make gcc git dkms
 
+      - name: clone-rtw89-repo
+        type: shell
+        commands:
+          - cd /tmp
+          - git clone https://github.com/lwfinger/rtw89.git
+          - cd rtw89
+          - git clean -xfd
+
+      - name: build-rtw89
+        type: shell
+        commands:
+          - cd /tmp/rtw89
+          - dpkg-buildpackage -b -rfakeroot -us -uc
+          - cd ..
+          - ls
+
+      - name: install-rtw89
+        type: shell
+        commands:
+          - dpkg -i /tmp/rtw89-dkms_*.deb
+
+      - name: configure-kernel
+        type: shell
+        commands:
+          - touch /etc/modprobe.d/50-rtw89.conf
+          - echo "blacklist rtw89_8852be" >> /etc/modprobe.d/50-rtw89.conf # blacklist the old driver
+          - echo "options rtw89_core disable_ps_mode=y" >> /etc/modprobe.d/50-rtw89.conf
+          - echo "options rtw89_core disable_clkreq=y" >> /etc/modprobe.d/50-rtw89.conf
+          - echo "options rtw89_core disable_aspm_l1=y" >> /etc/modprobe.d/50-rtw89.conf
+          - echo "options rtw89_core disable_aspm_l1ss=y" >> /etc/modprobe.d/50-rtw89.conf
+
+      # Put your custom actions before this comment
+
+      - name: set-image-name-abroot
+        type: includes
+        includes:
+          - modules/80-set-image-abroot-config.yml
+
+      - name: cleanup
+        type: shell
+        commands:
+          - apt-get autoremove -y
+          - apt-get clean
+          - lpkg --lock
+
+      - name: fsguard
+        type: fsguard
+        CustomFsGuard: false
+        FsGuardLocation: "/usr/sbin/FsGuard"
+        GenerateKey: true
+        FilelistPaths: ["/usr/bin"]
+        modules:
+          - name: remove-prev-fsguard
+            type: shell
+            commands:
+              - rm -rf /FsGuard
+              - rm -f ./minisign.pub ./minisign.key
+              - chmod +x /usr/sbin/init
+
+      - name: cleanup2
+        type: shell
+        commands:
+          - rm -rf /tmp/*
+          - rm -rf /var/tmp/*
+          - rm -rf /sources
